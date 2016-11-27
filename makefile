@@ -52,8 +52,8 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vcos/pthreads \
 				-I/opt/vc/include/interface/vcos/generic
 				
-LIBS_DIR	= -L/usr/local/lib -L/opt/vc/lib -L$(ROOT_DIR)/app/lib
-
+LIBS_DIR	= -L/opt/vc/lib -L$(ROOT_DIR)/lib/ilclient -L$(ROOT_DIR)/lib/mp4v2
+#-L/usr/local/lib
 COMPILE = $(TOOL_PREFIX)gcc $(C_FLAGS) $(INC_DIR)
 LINK 	= $(TOOL_PREFIX)gcc
 STRIP 	= $(TOOL_PREFIX)strip

@@ -32,8 +32,8 @@ all : $(LIB)
 $(LIB) : $(OBJS)
 	$(AR) r $@ $(OBJS)
 	$(RANLIB) $@
-	cp -f $@ $(APP_COMMON_LIB_DIR)
-	chmod 777 $(APP_COMMON_LIB_DIR)/$(LIB)
+	#cp -f $@ $(APP_COMMON_LIB_DIR)
+	#chmod 777 $(APP_COMMON_LIB_DIR)/$(LIB)
 	
 %.o:%.c
 	$(COMPILE_TOOLS) $(C_FLAGS) $(INLUCDE_DIR) -c $^ -o $@
