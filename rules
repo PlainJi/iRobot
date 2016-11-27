@@ -1,6 +1,0 @@
-ROOT_DIR = /mnt/LinuxShare/pi/1.Preview&Storage/iPlain
-#ROOT_DIR = /root/iPlain
-
-TOOL_DIR=
-TOOL_PREFIX=
-APP_COMMON_LIB_DIR=$(ROOT_DIR)/app/lib
