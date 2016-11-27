@@ -5,20 +5,21 @@ TOOL_DIR=
 TOOL_PREFIX=
 ROOT_DIR:=$(shell pwd)
 TARGET_PACKAGE_DIR=$(ROOT_DIR)/
+APP_COMMON_LIB_DIR=$(ROOT_DIR)/app/lib
 TARGET_NAME=iPlain
 DBG_NAME=_dbg
 ###################################################
 cmd = @echo '  $(echo_cmd_$(1))' && $(cmd_$(1))
-echo_cmd_clean  = CLEAN  $(2)
-cmd_clean  = make --quiet -C $(2) clean
-echo_cmd_make   = MAKE  $(2)
-cmd_make   = make --quiet -C $(2)
 echo_cmd_cc_o_c = CC  $@
 cmd_cc_o_c = $(COMPILE) $(COMPILE_FLAGS) -c -o $@ $<
 echo_cmd_link   = LINK  $@
 cmd_link   = $(LINK) -o $@ $^ $(RELLDFLAGS)
 echo_cmd_strip  = STRIP  $@
-cmd_strip  = $(STRIP) $@ ; $(STRIP) -x -R .note -R .comment $@
+cmd_strip  = $(STRIP) $@; $(STRIP) -x -R .note -R .comment $@
+echo_cmd_clean  = CLEAN  $(2)
+cmd_clean  = make --quiet -C $(2) clean
+echo_cmd_make   = MAKE  $(2)
+cmd_make   = make --quiet -C $(2)
 ###################################################
 COM_SOURCES :=
 -include $(ROOT_DIR)/app/media/SOURCES
@@ -51,7 +52,7 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vcos/pthreads \
 				-I/opt/vc/include/interface/vcos/generic
 				
-LIBS_DIR	= -L$(ROOT_DIR)/app/lib -L/usr/local/lib -L/opt/vc/lib
+LIBS_DIR	= -L/usr/local/lib -L/opt/vc/lib -L$(ROOT_DIR)/app/lib
 
 COMPILE = $(TOOL_PREFIX)gcc $(C_FLAGS) $(INC_DIR)
 LINK 	= $(TOOL_PREFIX)gcc
@@ -74,14 +75,13 @@ endif
 ##################################################
 .PHONY: all clean
 
-#如果要使用force build, 需要再建立一层依赖关系！！
-#all:test
-#test:forceBuild H2642PS
-#forceBuild:
-#	-@rm -f ./obj/src/PS.o
-#	-@rm H2642PS
+all: final_target
 
-all:$(TARGET)
+forceBuild:
+	@rm -f ./obj/app/sys/version.o
+	@rm -f $(TARGET)
+	
+final_target: forceBuild $(TARGET)
 	
 $(TARGET): $(C_OBJS) $(CPP_OBJS) $(TAR_C_OBJS)
 	$(call cmd,link)

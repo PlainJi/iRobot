@@ -37,6 +37,7 @@
 #define SIZE_PER_FILE	(250*1024*1024)
 
 int running = 1;
+extern void prt_soft_version(void);
 
 void Stop(int signo)
 {
@@ -98,6 +99,7 @@ int writeRecodeFile(pData_Info_s frameInfo, unsigned char ptype, char *enc_buf, 
 
 int main(int argc, char *argv[])
 {
+	prt_soft_version();
 	if (argc != 1)
 	{
 		printf("Usage: %s file.mp4\n", argv[0]);

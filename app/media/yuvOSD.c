@@ -342,46 +342,6 @@ void LCD_WriteASCIIStr1216(struct yuv_handle *yuvHandle, unsigned char x, unsign
 	}
 }
 
-/*
-void LCD_WriteNum(struct yuv_handle *yuvHandle, unsigned char x,unsigned char y,u32 num)
-{
-	unsigned char length = 0,i = 0;
-	u32 temp,databuf;
-	unsigned char asciibit = 8;
-	databuf	= num;
-	
-	if(num == 0)
-		LCD_WriteASCII1216(yuvHandle, x, y, '0', 16);
-	while(num!=0)
-	{
-		num = num / 10;
-		length++;
-	}
-	for(i=0;i<length;i++)
-	{
-		temp = databuf % 10;
-		databuf = databuf / 10;
-		LCD_WriteASCII1216(yuvHandle, x+(length*asciibit-asciibit), y, temp+48, 16);
-		x -= asciibit;
-	}
-}
-
-void LCD_WriteNumLen(struct yuv_handle *yuvHandle, unsigned char x,unsigned char y,u32 num,unsigned char length,unsigned char size)
-{
-	unsigned char i = 0 ;
-	u32 temp;
-	unsigned char asciibit = size/2;
-	
-	for(i=0;i<length;i++)
-	{
-		temp = num % 10;
-		num = num / 10;
-		LCD_WriteASCII1216(yuvHandle, x+(length*asciibit-asciibit), y, temp+48, 16);
-		x -= asciibit;
-	}
-}
-*/
-
 struct yuv_handle *yuvOSD_open(struct yuv_param param)
 {
 	struct yuv_handle *handle = malloc(sizeof(struct yuv_handle));
