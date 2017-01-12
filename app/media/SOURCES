@@ -1,5 +1,0 @@
-DIR_NAME = app/media
-
-SRCS = crc32.c omx_encode.c soft_convert.c v4l_capture.c yuvOSD.c mp4encode.c
-
-COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

@@ -9,38 +9,36 @@
 #define RTSP_RECV_SIZE			1024
 #define RTSP_SERVER_START_PORT	21000
 
-typedef enum
+typedef enum stream_mode_m
 {
 	RTP_UDP,
 	RTP_TCP,
 	RAW_UDP
-}StreamingMode;
+}STREAM_MODE;
 
-typedef enum
+typedef enum rtsp_status_m
 {
 	RTSP_IDLE = 0,
 	RTSP_CONNECTED = 1,
 	RTSP_SENDING = 2,
 }RTSP_STATUS;
 
-typedef struct
+typedef struct rtsp_client_t
 {
 	int index;
-	int socket;
-	int streamSocket;
-	struct sockaddr_in clientaddr;
-	int reqchn;
-	int seqnum;
-	int seqnum2;
-	unsigned int tsvid;
-	unsigned int tsaud;
-	int status;
-	int sendIframe;
-	int sessionid;
-	int rtpport[2];
-	int rtcpport;
-	char clientIP[20];
+	int ssrc;
+	int sessionID;
+	struct sockaddr_in clientAddr;
+	int socketRtsp;
+	int socketStream;
+	int portRtp;
+	int portRtcp;
+	char clientIP[16];
 	char urlPre[PARAM_STRING_MAX];
+	int requestChannel;
+	int status;			//intract status
 }RTSP_CLIENT;
+
+void rtsp_server_task(void);
 
 #endif

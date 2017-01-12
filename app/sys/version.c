@@ -1,9 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
+#include "include.h"
 
-#define MAJOR_VERSION	1
+#define MAJOR_VERSION	2
 #define SUB_VERSION		0
 #define MINOR_VERSION	0
 

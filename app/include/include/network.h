@@ -1,5 +1,5 @@
-#ifndef INCLUDE_NETWORK_H
-#define INCLUDE_NETWORK_H
+#ifndef NETWORK_H
+#define NETWORK_H
 
 #include "comdef.h"
 #include <netinet/in.h>

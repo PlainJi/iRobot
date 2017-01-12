@@ -10,11 +10,11 @@ TARGET_NAME=iPlain
 DBG_NAME=_dbg
 ###################################################
 cmd = @echo '  $(echo_cmd_$(1))' && $(cmd_$(1))
-echo_cmd_cc_o_c = CC  $@
+echo_cmd_cc_o_c = CC	$@
 cmd_cc_o_c = $(COMPILE) $(COMPILE_FLAGS) -c -o $@ $<
-echo_cmd_link   = LINK  $@
+echo_cmd_link   = LINK	$@
 cmd_link   = $(LINK) -o $@ $^ $(RELLDFLAGS)
-echo_cmd_strip  = STRIP  $@
+echo_cmd_strip  = STRIP	$@
 cmd_strip  = $(STRIP) $@; $(STRIP) -x -R .note -R .comment $@
 echo_cmd_clean  = CLEAN  $(2)
 cmd_clean  = make --quiet -C $(2) clean
@@ -22,7 +22,8 @@ echo_cmd_make   = MAKE  $(2)
 cmd_make   = make --quiet -C $(2)
 ###################################################
 COM_SOURCES :=
--include $(ROOT_DIR)/app/media/SOURCES
+-include $(ROOT_DIR)/app/encode/SOURCES
+-include $(ROOT_DIR)/app/record/SOURCES
 -include $(ROOT_DIR)/app/network/SOURCES
 -include $(ROOT_DIR)/app/sys/SOURCES
 C_SRCS   = $(filter %.c, $(COM_SOURCES))
@@ -36,11 +37,13 @@ C_FLAGS =	-Wall -Wno-unused -Wno-write-strings -Wno-missing-field-initializers \
 			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM
 LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
 			-lbcm_host -lcontainers -lilclient -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
-			-lmp4v2
+			-lmp4v2 -lposix_if
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I$(ROOT_DIR)/app/include/include \
-				-I$(ROOT_DIR)/lib/mp4v2/include/mp4v2 \
+				-I$(ROOT_DIR)/lib/ilclient \
+				-I$(ROOT_DIR)/lib/mp4v2/include \
+				-I$(ROOT_DIR)/lib/posix \
 				-I/opt/vc/include \
 				-I/opt/vc/include/interface/mmal \
 				-I/opt/vc/include/interface/vchi \
@@ -52,7 +55,7 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vcos/pthreads \
 				-I/opt/vc/include/interface/vcos/generic
 				
-LIBS_DIR	= -L/opt/vc/lib -L$(ROOT_DIR)/lib/ilclient -L$(ROOT_DIR)/lib/mp4v2
+LIBS_DIR	= -L/opt/vc/lib -L$(ROOT_DIR)/lib/ilclient -L$(ROOT_DIR)/lib/mp4v2 -L$(ROOT_DIR)/lib/posix
 #-L/usr/local/lib
 COMPILE = $(TOOL_PREFIX)gcc $(C_FLAGS) $(INC_DIR)
 LINK 	= $(TOOL_PREFIX)gcc
@@ -101,9 +104,9 @@ $(TAR_C_OBJS):./obj/%.o:%.c
 
 clean:
 	-@rm -rf ./obj
-	-@echo " CLEAN obj"
+	-@echo "  CLEAN	obj"
 	-@rm -rf $(TARGET)
-	-@echo " CLEAN target"
+	-@echo "  CLEAN	target"
 
 
 

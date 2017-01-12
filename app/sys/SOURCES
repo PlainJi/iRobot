@@ -1,5 +1,5 @@
 DIR_NAME = app/sys
 
-SRCS = record.c version.c
+SRCS = main.c version.c
 
 COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

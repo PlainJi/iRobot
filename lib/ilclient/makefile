@@ -18,9 +18,6 @@ SOURCES = $(wildcard *.c)
 HEADERS = $(wildcard *.h)
 OBJS = $(patsubst %.c, %.o, $(SOURCES))
 
-ROOTDIR = ../..
-include $(ROOTDIR)/rules
-
 COMPILE_TOOLS = $(TOOL_PREFIX)gcc
 AR = $(TOOL_PREFIX)ar
 RANLIB = $(TOOL_PREFIX)ranlib
@@ -32,8 +29,6 @@ all : $(LIB)
 $(LIB) : $(OBJS)
 	$(AR) r $@ $(OBJS)
 	$(RANLIB) $@
-	#cp -f $@ $(APP_COMMON_LIB_DIR)
-	#chmod 777 $(APP_COMMON_LIB_DIR)/$(LIB)
 	
 %.o:%.c
 	$(COMPILE_TOOLS) $(C_FLAGS) $(INLUCDE_DIR) -c $^ -o $@
