@@ -1,0 +1,7 @@
+DIR_NAME = app/encode
+
+SRCS =  capture_v4l.c osd_yuyv.c convert_yuyv.c encode_omx.c encode_main.c
+
+#crc32.c  encode_mp4.c
+
+COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

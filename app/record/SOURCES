@@ -1,0 +1,5 @@
+DIR_NAME = app/record
+
+SRCS = crc32.c mp4.c record.c
+
+COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))
