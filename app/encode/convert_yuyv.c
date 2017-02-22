@@ -1,4 +1,4 @@
-#include "include/convert_yuyv.h"
+#include "video_inc/convert_yuyv.h"
 
 static void yuv422_to_yuv420(u8 *inbuf, u8 *outbuf, int width, int height)
 {
@@ -103,8 +103,14 @@ err0:
 
 void convert_close(CONVERT_HANDLE *handle)
 {
-	free(handle->dst_buffer);
+	if(NULL == handle) {
+		return;
+	}
+	
+	if(handle->dst_buffer)
+		free(handle->dst_buffer);
 	free(handle);
+	
 	printf("+++ Convert Closed\n");
 }
 

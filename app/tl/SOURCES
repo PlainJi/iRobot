@@ -1,0 +1,5 @@
+DIR_NAME = app/tl
+
+SRCS =  interaction.c
+
+COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

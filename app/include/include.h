@@ -1,20 +1,23 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
-#include "include/capture_v4l.h"
-#include "include/osd_yuyv.h"
-#include "include/convert_yuyv.h"
-#include "include/encode_omx.h"
-#include "include/encode_main.h"
+#include "video_inc/capture_v4l.h"
+#include "video_inc/osd_yuyv.h"
+#include "video_inc/convert_yuyv.h"
+#include "video_inc/encode_omx.h"
+#include "video_inc/encode_main.h"
 
-#include "include/mp4.h"
-#include "include/PS.h"
-#include "include/record.h"
+#include "video_inc/mp4.h"
+#include "video_inc/PS.h"
+#include "video_inc/record.h"
 
-#include "include/sock.h"
-#include "include/rtp.h"
-#include "include/rtspServer.h"
+#include "video_inc/sock.h"
+#include "video_inc/rtp.h"
+#include "video_inc/rtspServer.h"
 #include "posix.h"
+
+#include "bd_inc/voice.h"
+#include "tl_inc/interaction.h"
 
 //#define WIDTH 160
 //#define HEIGHT 120

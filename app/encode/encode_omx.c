@@ -284,6 +284,9 @@ ENC_HANDLE *encode_open(ENC_PARAM param)
 
 void encode_close(ENC_HANDLE *handle)
 {
+	if(NULL == handle) {
+		return;
+	}
 	ilclient_disable_port_buffers(handle->video_encode, OMX_VIDENC_INPUT_PORT, NULL, NULL, NULL);
 	ilclient_disable_port_buffers(handle->video_encode, OMX_VIDENC_OUTPUT_PORT, NULL, NULL, NULL);
 	ilclient_state_transition(handle->list, OMX_StateIdle);
@@ -291,7 +294,9 @@ void encode_close(ENC_HANDLE *handle)
 	ilclient_cleanup_components(handle->list);
 	OMX_Deinit();
 	ilclient_destroy(handle->client);
-	free(handle->EncodeBuf.buf);
+
+	if(handle->EncodeBuf.buf)
+		free(handle->EncodeBuf.buf);
 	free(handle);
 	printf("+++ Encode Closed\n");
 }

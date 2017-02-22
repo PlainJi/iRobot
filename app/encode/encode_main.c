@@ -170,7 +170,7 @@ void encode_task(void)
 		
 		if ((ret = encode_one_frame(encHandle, cvtBuf, cvtLen, &encBuf, &encLen, &picType)) <0) {
 			printf("--- encode_do failed\n");
-			break;
+			continue;
 		}
 		if (encLen <= 0) {
 			printf("!!! No encode data, len=%d\n", encLen);

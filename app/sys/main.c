@@ -2,6 +2,9 @@
 #include <signal.h>
 
 DEV_CFG_PARAM devCfgParam;
+extern char answer[256];
+extern void prt_soft_version(void);
+extern int rec_pcm(void);
 
 void initDefaultParam(void)
 {
@@ -37,7 +40,6 @@ void initDefaultParam(void)
 }
 
 int running = 1;
-extern void prt_soft_version(void);
 
 void Stop(int signo)
 {
@@ -53,14 +55,27 @@ int main(int argc, char *argv[])
 	initDefaultParam();
 
 	task_creat(NULL, 90, 8192, (FUNC)encode_task, NULL);
-	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
+	task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
 	task_creat(NULL, 60, 2048, (FUNC)rtsp_server_task, NULL);
-	encode_start();
-	
-	while (running) {
-		sleep(10);
+	task_creat(NULL, 60, 2048, (FUNC)rec_pcm, NULL);
+
+	while(1) {
+		if(0==encode_start()) {
+			break;
+		}
+		CUS_ERR("init cam failed!!\n");
+
+		sleep(1);
+		encode_stop();
 	}
 	
+	bd_init();
+	
+	while (running) {
+		sleep(20);
+	}
+	
+	bd_deinit();
 	encode_exit();
 	
 	return 0;

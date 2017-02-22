@@ -26,4 +26,8 @@ typedef unsigned long long int u64;
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
 #define UNUSED(expr) do{(void)(expr);}while(0)
 
+//DEBUG_MSG
+#define SYS_ERR()		printf("File:%s, Func:%s, Line:%d, Info:[%03d]%s\n", __FILE__, __FUNCTION__, __LINE__, errno, (char*)strerror(errno))
+#define CUS_ERR(str)	printf("File:%s, Func:%s, Line:%d, Info:%s\n", __FILE__, __FUNCTION__, __LINE__, str)
+
 #endif

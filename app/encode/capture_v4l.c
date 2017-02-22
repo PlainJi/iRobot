@@ -3,7 +3,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <assert.h>
-#include "include/capture_v4l.h"
+#include "video_inc/capture_v4l.h"
 
 static int xioctl(int fd, int request, void *arg)
 {
@@ -202,11 +202,16 @@ static int init_device(CAP_HANDLE *handle)
 static void uninit_device(CAP_HANDLE *handle)
 {
 	u32 i;
+	if(NULL == handle) {
+		return;
+	}
 	for (i = 0; i < handle->nbuffers; ++i)
 		munmap(handle->buffers[i].start, handle->buffers[i].length);
 
-	free(handle->buffers);
-	handle->buffers = NULL;
+	if(handle->buffers) {
+		free(handle->buffers);
+		handle->buffers = NULL;
+	}
 }
 
 CAP_HANDLE *capture_open(CAP_PARAM param)
@@ -265,6 +270,9 @@ err:
 
 void capture_close(CAP_HANDLE *handle)
 {
+	if(NULL == handle) {
+		return;
+	}
 	uninit_device(handle);
 
 	if (handle->fd == -1)
@@ -310,6 +318,9 @@ int capture_start(CAP_HANDLE *handle)
 
 void capture_stop(CAP_HANDLE *handle)
 {
+	if(NULL == handle) {
+		return;
+	}
 	enum v4l2_buf_type btype;
 	btype = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	xioctl(handle->fd, VIDIOC_STREAMOFF, &btype);

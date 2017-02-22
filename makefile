@@ -25,6 +25,9 @@ COM_SOURCES :=
 -include $(ROOT_DIR)/app/encode/SOURCES
 -include $(ROOT_DIR)/app/record/SOURCES
 -include $(ROOT_DIR)/app/network/SOURCES
+-include $(ROOT_DIR)/app/bd/SOURCES
+-include $(ROOT_DIR)/app/tl/SOURCES
+-include $(ROOT_DIR)/app/sound/SOURCES
 -include $(ROOT_DIR)/app/sys/SOURCES
 C_SRCS   = $(filter %.c, $(COM_SOURCES))
 CPP_SRCS = $(filter %.cpp,$(COM_SOURCES))
@@ -37,13 +40,17 @@ C_FLAGS =	-Wall -Wno-unused -Wno-write-strings -Wno-missing-field-initializers \
 			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM
 LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
 			-lbcm_host -lcontainers -lilclient -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
-			-lmp4v2 -lposix_if
+			-lmp4v2 -lposix_if -lcjson -lcurl -lasound
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \
-				-I$(ROOT_DIR)/app/include/include \
+				-I$(ROOT_DIR)/app/include/video_inc \
+				-I$(ROOT_DIR)/app/include/bd_inc \
+				-I$(ROOT_DIR)/app/include/tl_inc \
 				-I$(ROOT_DIR)/lib/ilclient \
 				-I$(ROOT_DIR)/lib/mp4v2/include \
 				-I$(ROOT_DIR)/lib/posix \
+				-I$(ROOT_DIR)/lib/curl/include \
+				-I$(ROOT_DIR)/lib/cjson/include \
 				-I/opt/vc/include \
 				-I/opt/vc/include/interface/mmal \
 				-I/opt/vc/include/interface/vchi \
@@ -55,7 +62,12 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vcos/pthreads \
 				-I/opt/vc/include/interface/vcos/generic
 				
-LIBS_DIR	= -L/opt/vc/lib -L$(ROOT_DIR)/lib/ilclient -L$(ROOT_DIR)/lib/mp4v2 -L$(ROOT_DIR)/lib/posix
+LIBS_DIR	= 	-L/opt/vc/lib \
+				-L$(ROOT_DIR)/lib/ilclient \
+				-L$(ROOT_DIR)/lib/mp4v2 \
+				-L$(ROOT_DIR)/lib/posix \
+				-L$(ROOT_DIR)/lib/curl \
+				-L$(ROOT_DIR)/lib/cjson
 #-L/usr/local/lib
 COMPILE = $(TOOL_PREFIX)gcc $(C_FLAGS) $(INC_DIR)
 LINK 	= $(TOOL_PREFIX)gcc

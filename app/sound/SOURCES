@@ -1,0 +1,5 @@
+DIR_NAME = app/sound
+
+SRCS =  recPCM.c
+
+COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))
