@@ -22,12 +22,12 @@ echo_cmd_make   = MAKE  $(2)
 cmd_make   = make --quiet -C $(2)
 ###################################################
 COM_SOURCES :=
--include $(ROOT_DIR)/app/encode/SOURCES
+-include $(ROOT_DIR)/app/video/SOURCES
 -include $(ROOT_DIR)/app/record/SOURCES
 -include $(ROOT_DIR)/app/network/SOURCES
 -include $(ROOT_DIR)/app/bd/SOURCES
 -include $(ROOT_DIR)/app/tl/SOURCES
--include $(ROOT_DIR)/app/sound/SOURCES
+-include $(ROOT_DIR)/app/audio/SOURCES
 -include $(ROOT_DIR)/app/sys/SOURCES
 C_SRCS   = $(filter %.c, $(COM_SOURCES))
 CPP_SRCS = $(filter %.cpp,$(COM_SOURCES))
@@ -40,12 +40,13 @@ C_FLAGS =	-Wall -Wno-unused -Wno-write-strings -Wno-missing-field-initializers \
 			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM
 LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
 			-lbcm_host -lcontainers -lilclient -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
-			-lmp4v2 -lposix_if -lcjson -lcurl -lasound
+			-lmp4v2 -lposix_if -lcjson -lcurl -lz -lasound
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I$(ROOT_DIR)/app/include/video_inc \
 				-I$(ROOT_DIR)/app/include/bd_inc \
 				-I$(ROOT_DIR)/app/include/tl_inc \
+				-I$(ROOT_DIR)/app/include/audio_inc \
 				-I$(ROOT_DIR)/lib/ilclient \
 				-I$(ROOT_DIR)/lib/mp4v2/include \
 				-I$(ROOT_DIR)/lib/posix \

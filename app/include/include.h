@@ -16,8 +16,8 @@
 #include "video_inc/rtspServer.h"
 #include "posix.h"
 
-#include "bd_inc/voice.h"
-#include "tl_inc/interaction.h"
+#include "bd_inc/bd.h"
+#include "tl_inc/tl.h"
 
 //#define WIDTH 160
 //#define HEIGHT 120

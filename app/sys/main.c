@@ -2,9 +2,9 @@
 #include <signal.h>
 
 DEV_CFG_PARAM devCfgParam;
-extern char answer[256];
 extern void prt_soft_version(void);
-extern int rec_pcm(void);
+extern int pcm_task(void);
+extern int talk_task(void);
 
 void initDefaultParam(void)
 {
@@ -45,6 +45,7 @@ void Stop(int signo)
 {
 	printf("interrupt: %d\n", signo);
 	running = 0;
+	encode_exit();
 }
 
 int main(int argc, char *argv[])
@@ -54,11 +55,12 @@ int main(int argc, char *argv[])
 	signal(SIGINT, Stop);
 	initDefaultParam();
 
-	task_creat(NULL, 90, 8192, (FUNC)encode_task, NULL);
-	task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
-	task_creat(NULL, 60, 2048, (FUNC)rtsp_server_task, NULL);
-	task_creat(NULL, 60, 2048, (FUNC)rec_pcm, NULL);
-
+	//task_creat(NULL, 90, 8192, (FUNC)encode_task, NULL);
+	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
+	//task_creat(NULL, 60, 2048, (FUNC)rtsp_server_task, NULL);
+	task_creat(NULL, 60, 16*1048, (FUNC)pcm_task, NULL);
+	task_creat(NULL, 60, 64*1024, (FUNC)talk_task, NULL);
+/*
 	while(1) {
 		if(0==encode_start()) {
 			break;
@@ -68,18 +70,14 @@ int main(int argc, char *argv[])
 		sleep(1);
 		encode_stop();
 	}
-	
-	bd_init();
-	
-	while (running) {
-		sleep(20);
+*/
+	while(running) {
+		sleep(1);
 	}
-	
-	bd_deinit();
-	encode_exit();
 	
 	return 0;
 }
+
 
 
 

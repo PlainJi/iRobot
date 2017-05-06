@@ -1,4 +1,4 @@
-DIR_NAME = app/encode
+DIR_NAME = app/video
 
 SRCS =  capture_v4l.c osd_yuyv.c convert_yuyv.c encode_omx.c encode_main.c
 

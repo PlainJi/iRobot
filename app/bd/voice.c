@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "curl/curl.h"
-#include "curl/easy.h"
+#include "curl.h"
+#include "easy.h"
 #include "cJSON.h"
-#include "voice.h"
+#include "bd.h"
 
-char *my_token = NULL;
+char *my_token = TOKEN;
 
 unsigned int getToken(void)
 {
@@ -38,7 +38,7 @@ unsigned int getToken(void)
 	fpp = popen(cmd, "r");
 	fgets(result, 1024, fpp);
 	pclose(fpp);
-	
+
 	//parse token
 	if(NULL == (pJson=cJSON_Parse(result))) {
 		CUS_ERR(cJSON_GetErrorPtr());
@@ -74,14 +74,13 @@ int bd_init(void)
 	}
 	
 	printf("+++ bd  OK\n");
+	printf("token: %s\n", my_token);
 	return 0;
 }
 
 int bd_deinit(void)
 {
-	if(my_token)
-		free(my_token);
-	
+	if(my_token) free(my_token);
 	printf("+++ bd closed\n");
 	return 0;
 }
