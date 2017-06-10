@@ -12,3 +12,4 @@ make
 
 # other open source code url
 https://sourceforge.net/projects/cjson/
+https://curl.haxx.se/download/curl-7.54.0.tar.gz
