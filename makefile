@@ -48,7 +48,6 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I$(ROOT_DIR)/app/include/tl_inc \
 				-I$(ROOT_DIR)/app/include/audio_inc \
 				-I$(ROOT_DIR)/lib/ilclient \
-				-I$(ROOT_DIR)/lib/mp4v2/include \
 				-I$(ROOT_DIR)/lib/posix \
 				-I$(ROOT_DIR)/lib/curl/include \
 				-I$(ROOT_DIR)/lib/cjson/include \
@@ -65,7 +64,6 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				
 LIBS_DIR	= 	-L/opt/vc/lib \
 				-L$(ROOT_DIR)/lib/ilclient \
-				-L$(ROOT_DIR)/lib/mp4v2 \
 				-L$(ROOT_DIR)/lib/posix \
 				-L$(ROOT_DIR)/lib/curl \
 				-L$(ROOT_DIR)/lib/cjson
