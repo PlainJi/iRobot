@@ -56,10 +56,10 @@ int main(int argc, char *argv[])
 	initDefaultParam();
 
 	//task_creat(NULL, 90, 8192, (FUNC)encode_task, NULL);
-	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
 	//task_creat(NULL, 60, 2048, (FUNC)rtsp_server_task, NULL);
-	task_creat(NULL, 60, 16*1048, (FUNC)pcm_task, NULL);
-	task_creat(NULL, 60, 64*1024, (FUNC)talk_task, NULL);
+	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
+	task_creat(NULL, 60, 128*1024, (FUNC)pcm_task, NULL);
+	task_creat(NULL, 60, 128*1024, (FUNC)talk_task, NULL);
 /*
 	while(1) {
 		if(0==encode_start()) {

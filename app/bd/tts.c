@@ -132,7 +132,7 @@ int bd_tts(char *inStr, int isUTF8, char *outFileName)
 		printf("perform curl error:%d.\n", res);
 		goto exit;
 	}
-	printf("mp3 len=%u\n", chunk.size);
+	//printf("mp3 len=%u\n", chunk.size);
 	
 	//parse result
 	if(NULL != (pJson=cJSON_Parse((const char*)chunk.memory))) {

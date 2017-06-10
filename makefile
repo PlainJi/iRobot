@@ -39,7 +39,7 @@ C_FLAGS =	-Wall -Wno-unused -Wno-write-strings -Wno-missing-field-initializers \
 			-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DHAVE_LIBOPENMAX=2 -DOMX -DOMX_SKIP64BIT \
 			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM
 LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
-			-lbcm_host -lcontainers -lilclient -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
+			-lbcm_host -lcontainers -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
 			-lmp4v2 -lposix_if -lcjson -lcurl -lz -lasound
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \

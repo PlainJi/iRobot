@@ -73,7 +73,7 @@ int tl_ask(char *inStr, int isUTF8, char *outStr, int outLen)
 		goto exit;
 	}
 	strncpy(outStr, ptext->valuestring, outLen);
-	printf("ask: %s, answer:%s\n", utfStr, outStr);
+	printf("ask: %s\nanswer:%s\n", utfStr, outStr);
 	ret = 0;
 	
 exit:

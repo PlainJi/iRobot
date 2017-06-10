@@ -111,6 +111,8 @@ void putOneFrame(u8 *buf, u32 len, PIC_TYPE type)
 	encodeBuf.frameInfo[encodeBuf.writeIdx].len = len;
 	encodeBuf.frameInfo[encodeBuf.writeIdx].time = time(NULL);
 	encodeBuf.frameInfo[encodeBuf.writeIdx].type = (u8)type;
+	//printf("put [%3d] [%d] %6d %02X %02X %02X %02X %02X\n", encodeBuf.writeIdx, type, len, 
+	//			buf[0], buf[1], buf[2], buf[3], buf[4]);
 
 	encodeBuf.totalFrames++;
 	IDX_INCREASE(encodeBuf.writeIdx);
@@ -133,7 +135,6 @@ int saveYUVPic(char *name, u8 *p, int len)
 void encode_task(void)
 {
 	int ret;
-
 	void *capBuf, *cvtBuf, *encBuf;
 	int capLen, cvtLen, encLen;
 	PIC_TYPE picType;
@@ -176,7 +177,6 @@ void encode_task(void)
 			printf("!!! No encode data, len=%d\n", encLen);
 			continue;
 		}
-		
 		putOneFrame(encBuf, encLen, picType);
 		usleep(10*1000);
 	}

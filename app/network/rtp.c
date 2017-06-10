@@ -236,6 +236,8 @@ void rtp_preview_task(void *param)
 		}
 
 		get_one_frame(rIdx, &frameInfo);
+		//printf("get [%3d] [%d] %6d %02X %02X %02X %02X %02X\n", rIdx, frameInfo.type, frameInfo.len, 
+		//		frameInfo.p[0], frameInfo.p[1], frameInfo.p[2], frameInfo.p[3], frameInfo.p[4]);
 		getNalu(frameInfo.p, frameInfo.len, &nalu);
 		sendNalu(pClient->socketStream, &nalu, pClient->ssrc, timeStamp, &seqNo);
 		IDX_INCREASE(rIdx);

@@ -1,0 +1,1 @@
+apt install libmp4v2-dev curl mplayer

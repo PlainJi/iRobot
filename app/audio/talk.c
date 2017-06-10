@@ -29,7 +29,7 @@ void writeFile(unsigned char *buf, int len)
 	fwrite(buf, 1, len, fp);
 	fflush(fp);
 	fclose(fp);
-	printf("write file %s\n", temp);
+	//printf("write file %s\n", temp);
 }
 
 #if 0
@@ -133,7 +133,7 @@ int jurge(char *buffer, int len)
 				//printf("%4d 1 %9u\n", *pw, sum);
 			}
 		} else if(16 == RECORD_SAM_BITS) {
-			if(sum < 200000) {
+			if(sum < 500000) {
 				curState = 0;
 				//printf("%4d 0 %9u\n", *pw, sum);
 			} else {
@@ -183,7 +183,7 @@ int talk_task(void)
 					recResult, VOICE_STR_LEN) && strlen(recResult)) {
 					if(!tl_ask(recResult, 1, tl_answer, VOICE_STR_LEN) && strlen(tl_answer)) {
 						if(!bd_tts(tl_answer, 1, TTS_FILE)) {
-							system("mpg321 out.mp3");
+							system("mplayer out.mp3 > /dev/null 2>&1");
 						}
 					}
 				}

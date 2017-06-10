@@ -114,7 +114,7 @@ int bd_voice_recognition(const char *pcmData, int pcmLen, char *outStr, int outL
 		printf("get recognize result array[0] error!\n");
 		goto exit;
 	}
-	printf("result: %s\n", result1->valuestring);
+	//printf("result: %s\n", result1->valuestring);
 	strncpy(outStr, result1->valuestring, outLen);
 	ret = 0;
 	

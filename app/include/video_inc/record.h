@@ -1,7 +1,7 @@
 #ifndef __RECORD_H
 #define __RECORD_H
 
-#define SIZE_PER_FILE	(2*1024*1024)
+#define SIZE_PER_FILE	(256*1024*1024)
 
 typedef struct record_info_t
 {
