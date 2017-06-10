@@ -94,8 +94,11 @@ all: final_target
 forceBuild:
 	@rm -f ./obj/app/sys/version.o
 	@rm -f $(TARGET)
+
+subdir:
+	@cd lib/posix && make -s
 	
-final_target: forceBuild $(TARGET)
+final_target: forceBuild subdir $(TARGET)
 	
 $(TARGET): $(C_OBJS) $(CPP_OBJS) $(TAR_C_OBJS)
 	$(call cmd,link)
@@ -114,10 +117,12 @@ $(TAR_C_OBJS):./obj/%.o:%.c
 	$(call cmd,cc_o_c)
 
 clean:
-	-@rm -rf ./obj
-	-@echo "  CLEAN	obj"
-	-@rm -rf $(TARGET)
-	-@echo "  CLEAN	target"
+	@echo "  CLEAN posix"
+	@cd lib/posix && make clean -s
+	@rm -rf ./obj
+	@echo "  CLEAN	obj"
+	@rm -rf $(TARGET)
+	@echo "  CLEAN	target"
 
 
 
