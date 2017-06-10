@@ -6,7 +6,7 @@ TOOL_PREFIX=
 ROOT_DIR:=$(shell pwd)
 TARGET_PACKAGE_DIR=$(ROOT_DIR)/
 APP_COMMON_LIB_DIR=$(ROOT_DIR)/app/lib
-TARGET_NAME=iPlain
+TARGET_NAME=iRobot
 DBG_NAME=_dbg
 ###################################################
 cmd = @echo '  $(echo_cmd_$(1))' && $(cmd_$(1))

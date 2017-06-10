@@ -1,8 +1,14 @@
 # iRobot
 A Robot Based On Raspberry Pi.
 
-apt-get install mpg321
+# install essential packages
+./install_requirements.sh
 
-download https://curl.haxx.se/download/curl-7.54.0.tar.gz and compile it.
+# make iRobot
+make
 
-download https://sourceforge.net/projects/cjson/ and compile it.
+# execute program
+./iRobot
+
+# other open source code url
+https://sourceforge.net/projects/cjson/
