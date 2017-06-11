@@ -116,12 +116,10 @@ void convert_close(CONVERT_HANDLE *handle)
 
 int convert_do(CONVERT_HANDLE *handle, const void *inbuf, int isize, void **poutbuf, int *posize)
 {
-	if (isize != handle->src_buffersize)
-	{
+	if (isize != handle->src_buffersize) {
 		printf("--- %s:%s in buffer size[%d] != [%d]src image size\n", __FILE__, __FUNCTION__, handle->src_buffersize, isize);
 		abort();
 	}
-
 	yuv422_to_yuv420((u8*)inbuf, handle->dst_buffer, handle->params.inwidth, handle->params.inheight);
 	*poutbuf = handle->dst_buffer;
 	*posize = handle->dst_buffersize;

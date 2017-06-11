@@ -178,7 +178,7 @@ int talk_task(void)
 	while (running) {
 		if(-1 != start && -1 != end) {
 			if((len=get_pcm_data(pcm_file_buf, PCM_DATA_BUF, start, end)) > 0) {
-				writeFile(pcm_file_buf, len);
+				//writeFile(pcm_file_buf, len);
 				if(!bd_voice_recognition((const char*)pcm_file_buf, len, 
 					recResult, VOICE_STR_LEN) && strlen(recResult)) {
 					if(!tl_ask(recResult, 1, tl_answer, VOICE_STR_LEN) && strlen(tl_answer)) {

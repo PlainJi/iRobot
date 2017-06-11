@@ -1,6 +1,7 @@
 #include "include.h"
 
 static RECORD_INFO recordInfo;
+extern DEV_CFG_PARAM devCfgParam;
 
 int switchFile(u32 *rIdx)
 {
@@ -11,7 +12,7 @@ int switchFile(u32 *rIdx)
 	char fileName[64] = {0};
 	u32 spsLen = 0, ppsLen = 0, iFrameIdx = 0;
 
-	if(recordInfo.fileSize > SIZE_PER_FILE) {
+	if(recordInfo.fileSize > devCfgParam.recordParam.sizePerFile) {
 		printf("############## Finalize Record File [%d] #############\n", recordInfo.fileNo);
 		closeMP4();
 		recordInfo.fileSize = 0;
@@ -19,7 +20,7 @@ int switchFile(u32 *rIdx)
 
 	if(!recordInfo.fileSize) {
 		getShortDateTimeStr(time);
-		sprintf((char*)fileName, "/mnt/nfs7/%s_%02d.mp4", time, recordInfo.fileNo++);
+		sprintf((char*)fileName, "%s%s_%02d.mp4", devCfgParam.recordParam.recordPath, time, recordInfo.fileNo++);
 		openMP4(fileName);
 
 		while(!get_spspps_state()) {

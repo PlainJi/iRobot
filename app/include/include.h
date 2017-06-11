@@ -52,6 +52,7 @@ typedef struct dev_cfg_param_t
 	YUV_PARAM yuvParam;
 	CONVERT_PARAM convertParam;
 	ENC_PARAM encParam;
+	RECORD_PARAM recordParam;
 }DEV_CFG_PARAM;
 
 #endif

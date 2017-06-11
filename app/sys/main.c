@@ -37,6 +37,9 @@ void initDefaultParam(void)
 	devCfgParam.encParam.bitrate = BIT_RATE_KBPS;
 	devCfgParam.encParam.gop = GOP;
 	devCfgParam.encParam.chroma_interleave = 0;
+
+	devCfgParam.recordParam.recordPath = "/root/record/";
+	devCfgParam.recordParam.sizePerFile = 32*1024*1024;
 }
 
 int running = 1;
@@ -55,22 +58,18 @@ int main(int argc, char *argv[])
 	signal(SIGINT, Stop);
 	initDefaultParam();
 
-	//task_creat(NULL, 90, 8192, (FUNC)encode_task, NULL);
-	//task_creat(NULL, 60, 2048, (FUNC)rtsp_server_task, NULL);
-	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
+	task_creat(NULL, 90, 32*1024, (FUNC)encode_task, NULL);
+	task_creat(NULL, 60, 32*1024, (FUNC)rtsp_server_task, NULL);
+	task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
 	task_creat(NULL, 60, 128*1024, (FUNC)pcm_task, NULL);
 	task_creat(NULL, 60, 128*1024, (FUNC)talk_task, NULL);
-/*
-	while(1) {
-		if(0==encode_start()) {
-			break;
-		}
-		CUS_ERR("init cam failed!!\n");
 
-		sleep(1);
+	if(0!=encode_start()) {
+		CUS_ERR("init cam failed!!\n");
 		encode_stop();
+		return -1;
 	}
-*/
+
 	while(running) {
 		sleep(1);
 	}
