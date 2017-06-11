@@ -1,7 +1,7 @@
 #include "include.h"
 
 #define MAJOR_VERSION	2
-#define SUB_VERSION		0
+#define SUB_VERSION		1
 #define MINOR_VERSION	0
 
 void prt_soft_version(void)
