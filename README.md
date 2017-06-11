@@ -1,5 +1,9 @@
 # iRobot
 A Robot Based On Raspberry Pi.
+It can talk with you in chinese.
+It can record with a CSI or USB camera and video format is mp4(720P 25fps)
+Real-time video can be previewed by vlc via rtsp protocol, use cmd: rtsp://192.168.1.222:554
+Record file is splited by 250MB and is named by local time.
 ****
 ### Author:Plain Ji
 ### E-mail:plain_ji@163.com
