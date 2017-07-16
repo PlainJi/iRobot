@@ -174,6 +174,10 @@ int talk_task(void)
 	if(bd_init()<0) {
 		goto exit;
 	}
+
+	if(!bd_tts("Hello, world!", 0, TTS_FILE)) {
+		system("mplayer out.mp3 > /dev/null 2>&1");
+	}
 	
 	while (running) {
 		if(-1 != start && -1 != end) {

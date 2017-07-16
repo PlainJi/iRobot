@@ -22,6 +22,7 @@ echo_cmd_make   = MAKE  $(2)
 cmd_make   = make --quiet -C $(2)
 ###################################################
 COM_SOURCES :=
+-include $(ROOT_DIR)/app/util/SOURCES
 -include $(ROOT_DIR)/app/video/SOURCES
 -include $(ROOT_DIR)/app/record/SOURCES
 -include $(ROOT_DIR)/app/network/SOURCES
@@ -43,10 +44,13 @@ LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
 			-lmp4v2 -lposix_if -lcjson -lcurl -lz -lasound
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \
-				-I$(ROOT_DIR)/app/include/video_inc \
-				-I$(ROOT_DIR)/app/include/bd_inc \
-				-I$(ROOT_DIR)/app/include/tl_inc \
-				-I$(ROOT_DIR)/app/include/audio_inc \
+				-I$(ROOT_DIR)/app/util \
+				-I$(ROOT_DIR)/app/video \
+				-I$(ROOT_DIR)/app/record \
+				-I$(ROOT_DIR)/app/network \
+				-I$(ROOT_DIR)/app/bd \
+				-I$(ROOT_DIR)/app/tl \
+				-I$(ROOT_DIR)/app/audio \
 				-I$(ROOT_DIR)/lib/ilclient \
 				-I$(ROOT_DIR)/lib/posix \
 				-I$(ROOT_DIR)/lib/curl/include \
@@ -62,7 +66,7 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vcos/pthreads \
 				-I/opt/vc/include/interface/vcos/generic
 				
-LIBS_DIR	= 	-L/opt/vc/lib \
+LIBS_DIR	=	-L/opt/vc/lib \
 				-L$(ROOT_DIR)/lib/ilclient \
 				-L$(ROOT_DIR)/lib/posix \
 				-L$(ROOT_DIR)/lib/curl \

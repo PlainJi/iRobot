@@ -2,7 +2,8 @@
 #define RTSP_SERVER_H
 
 #define MAX_RTSP_CLIENT			6
-#define PARAM_STRING_MAX		100
+#define PARAM_STRING_MAX		33
+#define MAX_LINE_LEN			256
 
 #define RTP_H264				96
 #define RTSP_SERVER_PORT		554
@@ -28,16 +29,23 @@ typedef struct rtsp_client_t
 	int index;
 	int ssrc;
 	int sessionID;
-	struct sockaddr_in clientAddr;
+	int authentication;
+	char nonce[36];
+	char realm[36];
 	int socketRtsp;
 	int socketStream;
 	int portRtp;
 	int portRtcp;
 	char clientIP[16];
-	char urlPre[PARAM_STRING_MAX];
+	char urlPre[MAX_LINE_LEN];
 	int requestChannel;
 	int status;			//intract status
 }RTSP_CLIENT;
+
+typedef struct{
+	char username[32];
+	char password[32];
+}RTSP_PARAM;
 
 void rtsp_server_task(void);
 

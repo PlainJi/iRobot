@@ -1,5 +1,5 @@
-DIR_NAME = app/bd
+DIR_NAME = app/util
 
-SRCS =  recognition.c tts.c voice.c talk.c
+SRCS = md5.c
 
 COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

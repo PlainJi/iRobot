@@ -1,4 +1,4 @@
-#include "video_inc/convert_yuyv.h"
+#include "convert_yuyv.h"
 
 static void yuv422_to_yuv420(u8 *inbuf, u8 *outbuf, int width, int height)
 {

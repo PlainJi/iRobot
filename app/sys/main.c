@@ -40,6 +40,9 @@ void initDefaultParam(void)
 
 	devCfgParam.recordParam.recordPath = "/root/record/";
 	devCfgParam.recordParam.sizePerFile = 32*1024*1024;
+
+	strcpy(devCfgParam.rtspParam.username, "plain");
+	strcpy(devCfgParam.rtspParam.password, "cipher");
 }
 
 int running = 1;
@@ -60,7 +63,7 @@ int main(int argc, char *argv[])
 
 	task_creat(NULL, 90, 32*1024, (FUNC)encode_task, NULL);
 	task_creat(NULL, 60, 32*1024, (FUNC)rtsp_server_task, NULL);
-	task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
+	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
 	task_creat(NULL, 60, 128*1024, (FUNC)pcm_task, NULL);
 	task_creat(NULL, 60, 128*1024, (FUNC)talk_task, NULL);
 

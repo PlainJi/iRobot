@@ -9,10 +9,12 @@
 #include <sys/ioctl.h>
 
 #include "include.h"
+#include "md5.h"
 
 static char localipStr[20] = {0};
 static char dateHeaderStr[64] = {0};
 RTSP_CLIENT g_rtspClients[MAX_RTSP_CLIENT];
+extern DEV_CFG_PARAM devCfgParam;
 
 char *dateHeader(void)
 {
@@ -48,118 +50,71 @@ char* strDupSize(const char *str)
 	return copy;
 }
 
-int ParseRequestString( const char *reqStr, u32 len, char *cmdName, u32 cmdNameSize,
-						char *urlPreSuffix, u32 urlPreSuffixSize, char *urlSuffix, u32 urlSuffixMaxSize,
-		                char *sequence, u32 sequenceMaxSize)
+int ParseRequestString(char *reqStr, u32 len,
+						char *cmdName,
+						char *urlPreSuffix,
+						char *urlSuffix,
+		                char *cseq,
+		                char *username,
+		                char *response)
 {
-	char c = 0;
-	int parseSucceeded = FALSE;
-	u32 i,j,k,k1,k2,k3,n;
+	int tempLen = 0;
+	char *p = reqStr;
+	char *q = NULL;
+	char *r = NULL;
+	int maxLen = PARAM_STRING_MAX -1;
 
-	//parse cmd name
-	for (i = 0; i < cmdNameSize-1 && i < len; ++i) {
-		c = reqStr[i];
-		if (c == ' ' || c == '\t') {
-			parseSucceeded = TRUE;
-			break;
-		}
-		cmdName[i] = c;
+	//get cmd lind
+	tempLen = 0;
+	q = cmdName;
+	while(*p!='\0' && *p!=' ' && *p!='\t' && tempLen++<maxLen)
+		*q++ = *p++;
+	while(*p == ' ' || *p == '\t')
+		p++;
+	//get url
+	r = p;
+	if (r==strstr(p, "rtsp:/")) {
+		tempLen = 0;
+		q = urlPreSuffix;
+		while(*p!='\0' && *p != ' ' && *p != '\t' && tempLen++<maxLen)
+			*q++ = *p++;
 	}
-	cmdName[i] = '\0';
-	if (!parseSucceeded)
-		return -1;
-
-	//j = i+1;
-	//while (j < len && (reqStr[j] == ' ' || reqStr[j] == '\t')) ++j;
-
-	//rtsp://192.168.1.5:554
-	for (j = i+1; j < len-8; ++j) {
-		if ((reqStr[j]  == 'r' || reqStr[j]   == 'R')
-			&& (reqStr[j+1] == 't' || reqStr[j+1] == 'T')
-			&& (reqStr[j+2] == 's' || reqStr[j+2] == 'S')
-			&& (reqStr[j+3] == 'p' || reqStr[j+3] == 'P')
-			&& reqStr[j+4]  == ':' && reqStr[j+5] == '/') 
-		{
-			j += 6;
-			if (reqStr[j] == '/') {		// This is a "rtsp://" URL
-				++j;
-				while (j < len && reqStr[j] != '/' && reqStr[j] != ' ') ++j;
-			}else {						// This is a "rtsp:/" URL
-				--j;
-			}
-			i = j;
-			break;
+	//get cseq
+	if (NULL!=(r=strstr(p, "CSeq:"))) {
+		p = r;
+		while(*p!='\0' && *p != ' ' && *p != '\t')
+			p++;
+		while(*p == ' ' || *p == '\t')
+			p++;
+		tempLen = 0;
+		q = cseq;
+		while(*p!='\0' && *p!=' ' && *p!='\t' && *p!='\r' && *p!='\n' && tempLen++<maxLen)
+			*q++ = *p++;
+	}
+	//get auth line
+	if (NULL!=(r=strstr(p, "Authorization: Digest"))) {
+		p = r;
+		if (NULL!=(r=strstr(p, "username="))) {
+			tempLen = 0;
+			p = r + 10;
+			q = username;
+			while(*p != '"' && tempLen++<maxLen)
+				*q++ = *p++;
 		}
+		//printf("usr=%s\n", username);
+		if (NULL!=(r=strstr(p, "response="))) {
+			tempLen = 0;
+			p = r + 10;
+			q = response;
+			while(*p != '"' && tempLen++<maxLen)
+				*q++ = *p++;
+		}
+		//printf("rsp=%s\n", response);
 	}
 
-	// Look for the URL suffix (before the following "RTSP/"):
-	parseSucceeded = FALSE;
-	for (k = i+1; k < len-5; ++k) 
-	{
-		if (reqStr[k]   == 'R' && \
-			reqStr[k+1] == 'T' && \
-			reqStr[k+2] == 'S' && \
-			reqStr[k+3] == 'P' && \
-			reqStr[k+4] == '/')
-		{
-			// go back over all spaces before "RTSP/"
-			// the URL suffix comes from [k1+1,k]
-			while (--k >= i && reqStr[k] == ' '); 
-			k1 = k;
-			while (k1 > i && reqStr[k1] != '/' && reqStr[k1] != ' ') --k1;
-
-			// Copy urlSuffix
-			if (k - k1 + 1 > urlSuffixMaxSize) return -1;
-			n = 0;
-			k2 = k1+1;
-			while (k2 <= k) urlSuffix[n++] = reqStr[k2++];
-			urlSuffix[n] = '\0';
-			
-			// Also look for the URL 'pre-suffix' before this:
-			// the URL pre-suffix comes from [k3+1,k1]
-			k3 = --k1;
-			while (k3 > i && reqStr[k3] != '/' && reqStr[k3] != ' ') --k3;
-			
-			// Copy urlPreSuffix
-			if (k1 - k3 + 1 > urlPreSuffixSize) return -1;
-			n = 0; 
-			k2 = k3+1;
-			while (k2 <= k1) 
-				urlPreSuffix[n++] = reqStr[k2++];
-			urlPreSuffix[n] = '\0';
-
-			// go past " RTSP/"
-			i = k + 7;
-			parseSucceeded = TRUE;
-			break;
-		}
-	}
-	if (!parseSucceeded) 
-		return -1;
-
-	// Look for "CSeq:", skip whitespace
-	// then read everything up to the next \r or \n as 'CSeq':
-	parseSucceeded = FALSE;
-	for (j = i; j < len-5; ++j) {
-		if (reqStr[j] == 'C' && reqStr[j+1] == 'S' && reqStr[j+2] == 'e' && reqStr[j+3] == 'q' && reqStr[j+4] == ':') {
-			j += 5;
-			while (j < len && (reqStr[j] ==  ' ' || reqStr[j] == '\t')) ++j;
-			for (n = 0; n < sequenceMaxSize-1 && j < len; ++n,++j) {
-				c = reqStr[j];
-				if (c == '\r' || c == '\n') {
-					parseSucceeded = TRUE;
-					break;
-				}
-				sequence[n] = c;
-			}
-			sequence[n] = '\0';
-			break;
-		}
-	}
-	if (!parseSucceeded) 
-		return -1;
-	
-	return 0;
+	//if (strlen(cmdName) && strlen(urlPreSuffix) && strlen(cseq)) {return 0;}
+	if (strlen(cmdName) && strlen(cseq)) {return 0;}
+	else {return -3;}
 }
 
 int optionAnswer(char *cseq, int sock)
@@ -173,6 +128,71 @@ int optionAnswer(char *cseq, int sock)
 	memset(buf, 0, 1024);
 	sprintf(buf, "RTSP/1.0 200 OK\r\nCSeq: %s\r\n%sPublic: %s\r\n\r\n", cseq, dateHeader(), "OPTIONS,DESCRIBE,SETUP,PLAY,PAUSE,TEARDOWN");
 	if(socket_tcpSend(sock, buf, strlen(buf), NULL) < 0) {
+		return -1;
+	}else {
+		printf("%s\n", buf);
+	}
+	
+	return 0;
+}
+
+//md5(md5(username:realm:password):nonce:md5(public_method:url));
+int describeCheck(RTSP_CLIENT *pClient, char *url, char *username, char *response)
+{
+	unsigned char temp[128] = {0};
+	unsigned char md5_1[33] = {0};
+	unsigned char md5_2[33] = {0};
+	unsigned char res[33] = {0};
+
+	if (32!=strlen(response)) {
+		return -1;
+	}
+	if (!strcmp((const char*)devCfgParam.rtspParam.username, (const char*)username)) {
+		sprintf((char*)temp,"%s:%s:%s", username, pClient->realm, devCfgParam.rtspParam.password);
+		memset(md5_1, 0, sizeof(md5_1));
+		md5_enc(temp, md5_1);
+		
+		sprintf((char*)temp,"DESCRIBE:%s", url);
+		memset(md5_2, 0, sizeof(md5_2));
+		md5_enc(temp, md5_2);
+
+		sprintf((char*)temp,"%s:%s:%s", md5_1, pClient->nonce, md5_2);
+		memset(res, 0, sizeof(res));
+		md5_enc(temp, res);
+
+		if (strcmp((const char*)response, (const char*)res))
+			return -3;
+	} else
+		return -2;
+
+	return 0;
+}
+
+int describeAnswerAuth(char *cseq, RTSP_CLIENT *pClient, char *urlSuffix)
+{
+	int ret = 0;
+	const char *realm = "PlainServer1.0";
+	u8 md5[16] = {0};
+	char buf[1024] = {0};
+	
+	if (!pClient->socketRtsp){
+		return -1;
+	}
+
+	memset(md5, 0, 16);
+	memset(buf, 0, 1024);
+	memset(pClient->realm, 0, sizeof(pClient->realm));
+	strcpy(pClient->realm, realm);
+	md5_enc((u8*)dateHeader(), md5);
+	sprintf(pClient->nonce, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x", 
+		md5[0], md5[1], md5[2], md5[3], md5[4], md5[5], md5[6], md5[7], 
+		md5[8], md5[9], md5[10], md5[11], md5[12], md5[13], md5[14], md5[15]);
+	sprintf(buf,"RTSP/1.0 401 Unauthorized\r\n"
+				"CSeq: %s\r\n"
+				"%s"
+				"WWW-Authenticate:Digest realm=\"%s\", nonce=\"%s\"\r\n\r\n", 
+				cseq, dateHeader(), realm, pClient->nonce);
+	if(socket_tcpSend(pClient->socketRtsp, buf, strlen(buf), NULL) < 0) {
 		return -1;
 	}else {
 		printf("%s\n", buf);
@@ -209,7 +229,7 @@ int describeAnswer(char *cseq, int sock, char *urlSuffix)
 	pTemp2 += sprintf(pTemp2, "a=range:npt=0- \r\n");
 	pTemp2 += sprintf(pTemp2, "m=video 0 RTP/AVP 96\r\n");
 	pTemp2 += sprintf(pTemp2, "a=rtpmap:96 H264/90000\r\n");
-	pTemp += sprintf(pTemp, "Content-Base: rtsp://%s/%s/\r\n", localipStr, urlSuffix);
+	pTemp += sprintf(pTemp, "Content-Base: %s\r\n", urlSuffix);
 	pTemp += sprintf(pTemp, "Content-length: %d\r\n\r\n", strlen(sdpMsg));
 	strcat(pTemp, sdpMsg);
 
@@ -385,34 +405,37 @@ void rtspClientMsg(void *pParam)
 	int len = 0;
 	u16 portRtp,portRtcp;
 	char pRecvBuf[RTSP_RECV_SIZE];
-	char cmdName[16];
+	char cmdName[PARAM_STRING_MAX];
 	char urlPreSuffix[PARAM_STRING_MAX];
 	char urlSuffix[PARAM_STRING_MAX];
 	char cseq[PARAM_STRING_MAX];
+	char username[PARAM_STRING_MAX];
+	char response[PARAM_STRING_MAX];
 	
 	int socketStream = 0;
 	int s32Socket_opt_value = 1;
 	struct sockaddr_in clientAddr;
 
-	memset(pRecvBuf,0,sizeof(pRecvBuf));
 	printf("######## RTSP:Create Client %s\n", pClient->clientIP);
 	getLocalIP(pClient->socketRtsp, localipStr);
 	
 	while(pClient->status != RTSP_IDLE) {
 		// recv cmd
+		memset(pRecvBuf,0,sizeof(pRecvBuf));
 		if( (len=socket_tcpRecv(pClient->socketRtsp, pRecvBuf, RTSP_RECV_SIZE, NULL)) <= 0) {
 			printf("######## RTSP:Recv Error len=%d\n", len);
 			break;
 		}
 
-		//get ip & port
-		sscanf(pRecvBuf, "%*[^:]://%[^:]:%d/%s", strIp, &strPort, strOther);
-
+		memset(cmdName,0,sizeof(cmdName));
+		memset(urlPreSuffix,0,sizeof(urlPreSuffix));
+		memset(urlSuffix,0,sizeof(urlSuffix));
+		memset(cseq,0,sizeof(cseq));
+		memset(username,0,sizeof(username));
+		memset(response,0,sizeof(response));
 		printf("######## RTSP:Receive message\n%s\n", pRecvBuf);
-		if(ParseRequestString(pRecvBuf, len, cmdName, sizeof(cmdName), 
-			urlPreSuffix, sizeof(urlPreSuffix), urlSuffix, sizeof(urlSuffix), 
-			cseq, sizeof(cseq))<0) {
-			printf("######## RTSP:ParseRequestString error[%s]\n", pRecvBuf);
+		if(ParseRequestString(pRecvBuf, len, cmdName, urlPreSuffix, urlSuffix, cseq, username, response)<0) {
+			printf("######## RTSP:ParseRequestString error!\n");
 			break;
 		}
 		
@@ -421,7 +444,14 @@ void rtspClientMsg(void *pParam)
 			optionAnswer(cseq, pClient->socketRtsp);
 		}
 		else if(strstr(cmdName, "DESCRIBE")) {
-			describeAnswer(cseq, pClient->socketRtsp, urlSuffix);
+			if (!strlen(username) || !strlen(response))
+				describeAnswerAuth(cseq, pClient, urlSuffix);
+			else {
+				if (describeCheck(pClient, urlPreSuffix, username, response))
+					describeAnswerAuth(cseq, pClient, urlSuffix);
+				else
+					describeAnswer(cseq, pClient->socketRtsp, urlSuffix);
+			}
 		}
 		else if(strstr(cmdName, "SETUP")) {
 			setupAnswer(cseq, pClient->socketRtsp, pClient->sessionID, pRecvBuf, &portRtp, &portRtcp);
@@ -530,56 +560,7 @@ void rtsp_server_task(void)
 	printf("######## INIT_RTSP_Listen() Exit !! \n");
 }
 
-/*
-int getClientNum(void)
-{
-	int i = 0;
-	int cnt = 0;
-	
-	for(i=0;i<MAX_RTSP_CLIENT;i++)
-	{
-		if(RTSP_SENDING == g_rtspClients[i].status)
-		{
-			cnt++;
-		}
-	}
-	
-	return cnt;
-}
-*/
 
-/*
-int net_send(struct net_handle *handle, void *data, int size, int type)
-{
-	int i = 0;
-	UNUSED(handle);
-	
-	for(i=0;i<MAX_RTSP_CLIENT;i++)
-	{
-		if(RTSP_SENDING == g_rtspClients[i].status)
-		{
-			if(!g_rtspClients[i].sendIframe && 5!=type)
-			{
-				continue;
-			}
-			else
-			{
-				g_rtspClients[i].sendIframe = 1;
-			}
-			if(send(g_rtspClients[i].socketStream, data, size, 0)!=size)
-			{
-				printf("sd to [%d] failed, size: %d, err: %s\n", i, size, strerror(errno));
-			}
-		}
-	}
 
-	return 0;
-}
-
-int net_recv(struct net_handle *handle, void *data, int size)
-{
-	return recv(handle->sktfd, data, size, 0);
-}
-*/
 
 

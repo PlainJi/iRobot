@@ -1,23 +1,23 @@
 #ifndef INCLUDE_H
 #define INCLUDE_H
 
-#include "video_inc/capture_v4l.h"
-#include "video_inc/osd_yuyv.h"
-#include "video_inc/convert_yuyv.h"
-#include "video_inc/encode_omx.h"
-#include "video_inc/encode_main.h"
+#include "capture_v4l.h"
+#include "osd_yuyv.h"
+#include "convert_yuyv.h"
+#include "encode_omx.h"
+#include "encode_main.h"
 
-#include "video_inc/mp4.h"
-#include "video_inc/PS.h"
-#include "video_inc/record.h"
+#include "mp4.h"
+#include "PS.h"
+#include "record.h"
 
-#include "video_inc/sock.h"
-#include "video_inc/rtp.h"
-#include "video_inc/rtspServer.h"
+#include "sock.h"
+#include "rtp.h"
+#include "rtspServer.h"
 #include "posix.h"
 
-#include "bd_inc/bd.h"
-#include "tl_inc/tl.h"
+#include "bd.h"
+#include "tl.h"
 
 //#define WIDTH 160
 //#define HEIGHT 120
@@ -53,6 +53,7 @@ typedef struct dev_cfg_param_t
 	CONVERT_PARAM convertParam;
 	ENC_PARAM encParam;
 	RECORD_PARAM recordParam;
+	RTSP_PARAM rtspParam;
 }DEV_CFG_PARAM;
 
 #endif

@@ -3,7 +3,7 @@
 #include <sys/ioctl.h>
 #include <fcntl.h>
 #include <assert.h>
-#include "video_inc/capture_v4l.h"
+#include "capture_v4l.h"
 
 static int xioctl(int fd, int request, void *arg)
 {

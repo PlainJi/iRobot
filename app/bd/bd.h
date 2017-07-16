@@ -24,7 +24,7 @@ int bd_voice_recognition(const char *pcmData, s32 pcmLen, char *outStr, int outL
 #define TTS_SPD			(5)		//speed: 0~9
 #define TTS_PIT			(5)		//pitch: 0~9
 #define TTS_VOL			(9)		//volum: 0~9
-#define TTS_PER			(0)		//0:woman, 1:man
+#define TTS_PER			(1)		//0:woman, 1:man
 #define TTS_API			"http://tsn.baidu.com/text2audio"
 #define TTS_BODY		"tex=%s&lan=zh&ctp=1&spd=%d&pit=%d&vol=%d&per=%d&cuid=%s&tok=%s"
 #define TTS_API2		"http://tts.baidu.com/text2audio"
