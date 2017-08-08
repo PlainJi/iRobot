@@ -6,6 +6,8 @@
 #include <sys/timeb.h>
 #include "include.h"
 
+extern DEV_CFG_PARAM devCfgParam;
+
 u64 getCurMS(void)
 {
 	struct timeb tb;
@@ -241,7 +243,7 @@ void rtp_preview_task(void *param)
 		getNalu(frameInfo.p, frameInfo.len, &nalu);
 		sendNalu(pClient->socketStream, &nalu, pClient->ssrc, timeStamp, &seqNo);
 		IDX_INCREASE(rIdx);
-		timeStamp += 3600;
+		timeStamp += 90000/devCfgParam.encParam.fps;
 	}
 
 exit:

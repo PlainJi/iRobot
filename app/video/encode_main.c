@@ -148,7 +148,7 @@ void encode_task(void)
 		}
 		
 		calFps();
-		
+
 		if(0 != (ret = capture_get_data(capHandle, &capBuf, &capLen)) ) {
 			if (ret < 0) {
 				printf("--- capture_get_data failed\n");
@@ -159,16 +159,15 @@ void encode_task(void)
 				continue;
 			}
 		}
-		//cap_len  = WIDTH * HEIGHT * 16 / 8;
 		if (capLen <= 0) {
 			printf("!!! No capture data\n");
 			continue;
 		}
 		
 		osd_render_time(yuvHandle, capBuf);
-		
+
 		convert_do(convertHandle, capBuf, capLen, &cvtBuf, &cvtLen);
-		
+
 		if ((ret = encode_one_frame(encHandle, cvtBuf, cvtLen, &encBuf, &encLen, &picType)) <0) {
 			printf("--- encode_do failed\n");
 			continue;
@@ -177,8 +176,8 @@ void encode_task(void)
 			printf("!!! No encode data, len=%d\n", encLen);
 			continue;
 		}
+
 		putOneFrame(encBuf, encLen, picType);
-		usleep(10*1000);
 	}
 	
 	encode_stop();
