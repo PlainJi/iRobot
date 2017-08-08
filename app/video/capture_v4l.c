@@ -169,6 +169,8 @@ static int init_device(CAP_HANDLE *handle)
 				handle->params.width, handle->params.height, fmt.fmt.pix.width, fmt.fmt.pix.height);
 		return -1;
 	}
+	/* Note VIDIOC_S_FMT may change width and height. */
+	/* Buggy driver paranoia. */
 	min = fmt.fmt.pix.width * 2;
 	if (fmt.fmt.pix.bytesperline < min)
 		fmt.fmt.pix.bytesperline = min;
@@ -179,8 +181,9 @@ static int init_device(CAP_HANDLE *handle)
 	// set capture params
 	CLEAR(sparam);
 	sparam.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
-	sparam.parm.capture.capturemode = V4L2_MODE_HIGHQUALITY;
 	sparam.parm.capture.capability = V4L2_CAP_TIMEPERFRAME;
+	sparam.parm.capture.capturemode = V4L2_MODE_HIGHQUALITY;
+	//sparam.parm.capture.capturemode = 0;
 	sparam.parm.capture.timeperframe.denominator = handle->params.rate;
 	sparam.parm.capture.timeperframe.numerator = 1;
 	if (xioctl(handle->fd, VIDIOC_S_PARM, &sparam) == -1)
@@ -337,40 +340,30 @@ int capture_get_data(CAP_HANDLE *handle, void **buf, int *len)
 	FD_SET(handle->fd, &fds);
 	tv.tv_sec = 2;	// must be reset
 	tv.tv_usec = 0;
-
 	ret = select(handle->fd + 1, &fds, NULL, NULL, &tv);
-	if (ret == -1)
-	{
+	if (ret == -1) {
 		printf("--- select failed, %d, %s\n", errno, strerror(errno));
 		return -1;
 	}
-
-	if (ret == 0)    // select timeout
-	{
+	if (ret == 0) {	// select timeout
 		printf("--- select timeout!\n");
 		return -1;
 	}
-
 	// put the v4l buffer to the queue if it's not
-	if (!handle->v4lbuf_put)
-	{
-		if (xioctl(handle->fd, VIDIOC_QBUF, &handle->v4lbuf) == -1)
-		{
+	if (!handle->v4lbuf_put) {
+		if (xioctl(handle->fd, VIDIOC_QBUF, &handle->v4lbuf) == -1) {
 			printf("--- VIDIOC_QBUF failed\n");
 			return -1;
 		}
 		handle->v4lbuf_put = 1;
 	}
-
 	// fill the buffer from queue
 	CLEAR(handle->v4lbuf);
 	handle->v4lbuf.type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
 	handle->v4lbuf.memory = V4L2_MEMORY_MMAP;
 
-	if (xioctl(handle->fd, VIDIOC_DQBUF, &handle->v4lbuf) == -1)
-	{
-		switch (errno)
-		{
+	if (xioctl(handle->fd, VIDIOC_DQBUF, &handle->v4lbuf) == -1) {
+		switch (errno) {
 			case EAGAIN:
 				return EAGAIN;		// > 0
 			case EIO:

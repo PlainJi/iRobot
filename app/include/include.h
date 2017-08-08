@@ -37,12 +37,12 @@
 #define WIDTH 1280
 #define HEIGHT 720
 
-//#define WIDTH 1920
-//#define HEIGHT 1080
+//#define WIDTH alignment16(1920)
+//#define HEIGHT alignment16(1080)
 
 #define YUV_INPUT_FMT	V4L2_PIX_FMT_YUYV
 #define YUV_OUTPUT_FMT	V4L2_PIX_FMT_YUV420
-#define FRAMERATE 		25
+#define FRAMERATE 		30
 #define GOP				20
 #define BIT_RATE_KBPS	2000
 

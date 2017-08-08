@@ -25,6 +25,7 @@ typedef unsigned long long int u64;
 #define TRUE	1
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
 #define UNUSED(expr) do{(void)(expr);}while(0)
+#define alignment16(a) ((a+0x0F)&(~0x0F))
 
 //DEBUG_MSG
 #define SYS_ERR()		printf("Func:%s, Line:%d, Info:[%03d]%s\n", __FUNCTION__, __LINE__, errno, (char*)strerror(errno))

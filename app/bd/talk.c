@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <fcntl.h>
-#include "recpcm.h"
+#include "pcm.h"
 #include "tl.h"
 #include "bd.h"
 
