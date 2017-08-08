@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <alsa/asoundlib.h>
-#include "recpcm.h"
+#include "pcm.h"
 
 static snd_pcm_t *handle = NULL;
 PCM_INFO pcmInfo;
