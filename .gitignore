@@ -35,5 +35,5 @@
 /si
 AccessParameters.txt
 iRobot
-out.mp3
+*.mp3
 *.pcm
