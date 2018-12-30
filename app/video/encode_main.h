@@ -27,7 +27,7 @@ typedef struct encode_buf_t
 
 int encode_start(void);
 void encode_stop(void);
-void encode_task(void);
+void encode_task(void *fd);
 void encode_exit(void);
 int get_one_frame(u32 idx, FRAME_INFO *frameInfo);
 void get_encode_buf(ENCODE_BUF **p);

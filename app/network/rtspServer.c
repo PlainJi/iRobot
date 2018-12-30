@@ -484,7 +484,7 @@ void rtspClientMsg(void *pParam)
 			printf("######## RTSP: Network Opened\n");
 			pClient->socketStream = socketStream;
 			pClient->status = RTSP_SENDING;
-			task_creat(NULL, 90, 8192, (FUNC)rtp_preview_task, pClient);
+			task_creat(NULL, 90, 128*1024, (FUNC)rtp_preview_task, pClient);
 		}
 		else if(strstr(cmdName, "PAUSE")) {
 			pauseAnswer(cseq, pClient->socketRtsp);
@@ -554,7 +554,7 @@ void rtsp_server_task(void)
 		g_rtspClients[slot].sessionID = sessionID++;
 		strcpy(g_rtspClients[slot].clientIP, inet_ntoa(clientAddr.sin_addr));
 
-		task_creat(NULL, 60, 2048, (FUNC)rtspClientMsg, &g_rtspClients[slot]);
+		task_creat(NULL, 60, 32*2048, (FUNC)rtspClientMsg, &g_rtspClients[slot]);
 	}
 
 	printf("######## INIT_RTSP_Listen() Exit !! \n");

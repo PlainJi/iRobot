@@ -1,10 +1,12 @@
 #include "include.h"
 #include <signal.h>
 
+int pip_h264[2] = {0};
 DEV_CFG_PARAM devCfgParam;
 extern void prt_soft_version(void);
 extern int pcm_task(void);
 extern int talk_task(void);
+extern int push_rtmp_stream(int pip_fp);
 
 void initDefaultParam(void)
 {
@@ -43,6 +45,10 @@ void initDefaultParam(void)
 
 	strcpy(devCfgParam.rtspParam.username, "plain");
 	strcpy(devCfgParam.rtspParam.password, "cipher");
+	if (pipe(pip_h264)<0) {
+		printf("pipe open error!\n");
+		exit(1);
+	}
 }
 
 int running = 1;
@@ -61,11 +67,12 @@ int main(int argc, char *argv[])
 	signal(SIGINT, Stop);
 	initDefaultParam();
 
-	task_creat(NULL, 90, 32*1024, (FUNC)encode_task, NULL);
-	task_creat(NULL, 60, 32*1024, (FUNC)rtsp_server_task, NULL);
+	task_creat(NULL, 90, 2048*1024, (FUNC)encode_task, (void*)pip_h264[1]);
+	task_creat(NULL, 60, 1024*1024, (FUNC)rtsp_server_task, NULL);
 	//task_creat(NULL, 60, 2048, (FUNC)record_task, NULL);
-	task_creat(NULL, 60, 128*1024, (FUNC)pcm_task, NULL);
-	task_creat(NULL, 60, 128*1024, (FUNC)talk_task, NULL);
+	//task_creat(NULL, 60, 128*1024, (FUNC)pcm_task, NULL);
+	//task_creat(NULL, 60, 128*1024, (FUNC)talk_task, NULL);
+	//task_creat(NULL, 60, 128*1024, (FUNC)push_rtmp_stream, (void*)pip_h264[0]);
 
 	if(0!=encode_start()) {
 		CUS_ERR("init cam failed!!\n");

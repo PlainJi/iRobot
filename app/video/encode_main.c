@@ -132,8 +132,9 @@ int saveYUVPic(char *name, u8 *p, int len)
 	return 0;
 }
 
-void encode_task(void)
+void encode_task(void *fd)
 {
+	int fd_w = (int)fd;
 	int ret;
 	void *capBuf, *cvtBuf, *encBuf;
 	int capLen, cvtLen, encLen;
@@ -148,7 +149,6 @@ void encode_task(void)
 		}
 		
 		calFps();
-
 		if(0 != (ret = capture_get_data(capHandle, &capBuf, &capLen)) ) {
 			if (ret < 0) {
 				printf("--- capture_get_data failed\n");
@@ -176,7 +176,7 @@ void encode_task(void)
 			printf("!!! No encode data, len=%d\n", encLen);
 			continue;
 		}
-
+		//write(fd_w, encBuf, encLen);
 		putOneFrame(encBuf, encLen, picType);
 	}
 	

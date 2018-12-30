@@ -38,10 +38,12 @@ CPP_OBJS = $(CPP_SRCS:%.cpp=./obj/%.o)
 C_FLAGS =	-Wall -Wno-unused -Wno-write-strings -Wno-missing-field-initializers \
 			-D_REENTRANT -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 \
 			-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DHAVE_LIBOPENMAX=2 -DOMX -DOMX_SKIP64BIT \
-			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM
+			-DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM \
+                        -Wno-deprecated
 LD_FLAGS =	-lpthread -lstdc++ -pthread -ldl -lm -lilclient_if \
 			-lbcm_host -lcontainers -lkhrn_client -lkhrn_static -lopenmaxil -lvcfiled_check -lvchiq_arm -lvchostif -lvcilcs -lvcos -lvcsm \
-			-lmp4v2 -lposix_if -lcjson -lcurl -lz -lasound
+			-lmp4v2 -lposix_if -lcjson -lcurl -lz -lasound \
+                        -lavutil -lavcodec -lavformat -lswscale
 
 INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I$(ROOT_DIR)/app/util \
@@ -64,14 +66,16 @@ INC_DIR		= 	-I$(ROOT_DIR)/app/include \
 				-I/opt/vc/include/interface/vmcs_host \
 				-I/opt/vc/include/interface/vmcs_host/linux \
 				-I/opt/vc/include/interface/vcos/pthreads \
-				-I/opt/vc/include/interface/vcos/generic
+				-I/opt/vc/include/interface/vcos/generic \
+                                -I/usr/local/include
 				
 LIBS_DIR	=	-L/opt/vc/lib \
 				-L$(ROOT_DIR)/lib/ilclient \
 				-L$(ROOT_DIR)/lib/posix \
 				-L$(ROOT_DIR)/lib/curl \
-				-L$(ROOT_DIR)/lib/cjson
-#-L/usr/local/lib
+				-L$(ROOT_DIR)/lib/cjson \
+                                -L/usr/local/lib
+
 COMPILE = $(TOOL_PREFIX)gcc $(C_FLAGS) $(INC_DIR)
 LINK 	= $(TOOL_PREFIX)gcc
 STRIP 	= $(TOOL_PREFIX)strip

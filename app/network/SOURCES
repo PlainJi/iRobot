@@ -1,5 +1,5 @@
 DIR_NAME = app/network
 
-SRCS = sock.c rtspServer.c rtp.c
+SRCS = sock.c rtspServer.c rtp.c rtmp.c
 
 COM_SOURCES += $(foreach file, $(SRCS),$(wildcard $(DIR_NAME)/$(file)))

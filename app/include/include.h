@@ -42,7 +42,7 @@
 
 #define YUV_INPUT_FMT	V4L2_PIX_FMT_YUYV
 #define YUV_OUTPUT_FMT	V4L2_PIX_FMT_YUV420
-#define FRAMERATE 		30
+#define FRAMERATE 		20
 #define GOP				20
 #define BIT_RATE_KBPS	2000
 
